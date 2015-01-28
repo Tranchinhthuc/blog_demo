@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :logged_in_user, only: [:index, :edit, :update, :destroy,
+  before_action :logged_in_user, only: [:edit, :update, :destroy,
                                         :following, :followers]
   before_action :correct_user,   only: [:edit, :update]
   before_action :admin_user,     only: :destroy
@@ -9,22 +9,33 @@ class UsersController < ApplicationController
   end
   def show
     @user = User.find(params[:id])
+    #@entry = current_user.entries.build(entry_params)
+   # id = @user.id
     @entries = @user.entries.paginate(page: params[:page])
   end
 
   def new
     @user = User.new
   end
+  def update
 
+    @user = User.find(params[:id])
+    @user.update(user_params)
+    redirect_to user_url(@user)
+  end
   def create
     @user = User.new(user_params)
+    #@user.activated = true;
     if @user.save
-      @user.send_activation_email
-      UserMailer.account_activation(@user).deliver_now
-      flash[:info] = "Please check your email to activate your account."
+      #@user.send_activation_email
+      #UserMailer.account_activation(@user).deliver_now
+      flash[:info] = "Thank you, your sign-up request was successful. Please, login now"
+
       redirect_to root_url
     else
-      render 'new'
+      #render 'new'
+      render 'static_pages/home'
+      #redirect_to root_url
     end
   end
 

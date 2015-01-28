@@ -1,0 +1,8 @@
+<aside class="col-md-4">
+	<% provide(:title, 'All users') %>
+	All users
+	<ul class="users">
+	      <%= render @users %>
+	</ul>
+	<%= will_paginate @users%>
+</aside>

@@ -1,6 +1,9 @@
-<% if @feed_items.any? %>
+
+	<% if @feed_items.any? %>
   <ol class="Entries">
     <%= render @feed_items %>
+    
   </ol>
   <%= will_paginate @feed_items %>
 <% end %>
+

@@ -1,0 +1,60 @@
+				    
+                <span class = "title-in-feed">
+                  <%= @entry.title %><br>
+                </span>
+                 
+
+                <span class="timestamp">
+                  <%= time_ago_in_words(@entry.created_at) %> ago.
+                  <% if current_user?(@entry.user) %>
+                    <%= link_to "Delete", @entry, method: :delete,
+                                                     data: { confirm: "You sure?" } %>
+                  <% end %>
+                </span>
+                <br>
+                <span class="content">
+                 
+                  <%= @entry.body %>
+                  <%= image_tag @entry.picture.url if @entry.picture? %>
+                </span>
+                <br>
+                
+               <br>
+
+               <% @comments2 = Comment.where("entries_id = #{@entry.id}") %>
+               <%if @comments2.length>0 %>
+                  <% @comments2.each do |comment| %>
+                  <br>
+                  <% user = User.find_by(id: comment.user_id) %>
+                  <%if !user.nil?%>
+                  <span class = "username">
+                    
+                    <%= link_to user.name, @entry.user %>:
+                  </span>
+                  
+                  <% end %>
+                  <%= comment.content %> 
+                  <% if current_user?(comment.user) %>
+                    
+                  <% end %><br>
+
+                  <span class="timestamp">
+                  <%= time_ago_in_words(comment.created_at) %> ago.
+                  <%= link_to "Delete", comment, method: :delete,
+                                                     data: { confirm: "You sure?" } %>
+                  </span>
+                  <% end %>
+                  <%@page_number = 2%>
+                   <section class="comment_form">
+                      <%= form_for(Comment.new, html: { multipart: true }) do |f| %>
+                        <%= render 'shared/error_messages', object: f.object %>
+                        <div class="field">
+                          <%= f.text_field :content, placeholder: "Comment..." %>
+                          <%= f.number_field :user_id, :value => @entry.user.id, :hidden =>true%>
+                          <%= f.number_field :entries_id, :value => @entry.id, :hidden =>true %>
+                          <%= f.number_field :page, :value => @page_number, :hidden =>true %>
+                        </div>
+                        <%= f.submit "Post", :hidden => true%>
+                      <% end %>
+                </section>
+               <% end %>

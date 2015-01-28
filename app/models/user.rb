@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
   has_many :entries, dependent: :destroy
+  has_many :comments, dependent: :destroy
   # User co nhieu quan he following(thuoc loai active_ralationship) voi source cua no la followed_id
   # Luu y la 2 dong dau da dat quan he giua user va ralationship roi!
   has_many :active_relationships, class_name: "Relationship", 

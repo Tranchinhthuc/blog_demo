@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150126084620) do
+ActiveRecord::Schema.define(version: 20150128060857) do
 
   create_table "comments", force: :cascade do |t|
     t.text     "content"
@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 20150126084620) do
     t.integer  "entries_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "page"
   end
 
   add_index "comments", ["entries_id"], name: "index_comments_on_entries_id"
@@ -42,6 +43,10 @@ ActiveRecord::Schema.define(version: 20150126084620) do
     t.datetime "updated_at",  null: false
   end
 
+  add_index "relationships", ["followed_id"], name: "index_relationships_on_followed_id"
+  add_index "relationships", ["follower_id", "followed_id"], name: "index_relationships_on_follower_id_and_followed_id", unique: true
+  add_index "relationships", ["follower_id"], name: "index_relationships_on_follower_id"
+
   create_table "users", force: :cascade do |t|
     t.string   "name"
     t.string   "email"
@@ -49,12 +54,12 @@ ActiveRecord::Schema.define(version: 20150126084620) do
     t.string   "remember_digest"
     t.boolean  "admin"
     t.string   "activation_digest"
-    t.boolean  "activated"
+    t.boolean  "activated",         default: true
     t.datetime "activated_at"
     t.string   "reset_digest"
     t.datetime "reset_sent_at"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
   end
 
 end
